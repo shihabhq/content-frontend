@@ -1,0 +1,109 @@
+@import "tailwindcss";
+
+/* ---------------- THEME ---------------- */
+@theme {
+  /* Brand colors */
+  --color-primary: #101a24;
+  --color-secondary: #ed7c30;
+
+  /* Light UI system */
+  --color-background-light: #f5f4f1;
+  --color-background-surface: #ffffff;
+  --color-text-main: #111827;
+  --color-text-muted: #6b7280;
+  --color-border-subtle: #e5e7eb;
+
+  /* Radii */
+  --radius-xl: 1.5rem;
+  --radius-2xl: 2rem;
+}
+
+/* ---------------- GLOBAL ---------------- */
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-geist-sans), system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+  background-color: var(--color-background-light);
+  color: var(--color-text-main);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* ---------------- TYPOGRAPHY ---------------- */
+h1, h2, h3 {
+  font-family: var(--font-geist-sans), system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+  font-weight: 700;
+}
+
+/* Section headers: use .section-title and .section-subtitle for consistency */
+.section-title {
+  font-family: var(--font-geist-sans), system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--color-text-main);
+  line-height: 1.25;
+}
+.section-subtitle {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  margin-top: 0.25rem;
+}
+.section-link {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-secondary);
+  transition: color 0.2s, opacity 0.2s;
+}
+.section-link:hover {
+  color: #c96a28;
+}
+
+
+
+/* Swiper bullets (light theme) */
+.swiper-bullet {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 9999px;
+  background: var(--color-border-subtle);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin: 0 3px !important;
+  opacity: 1 !important;
+}
+
+.swiper-bullet-active {
+  width: 24px !important;
+  background: var(--color-secondary) !important;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--color-background-light); }
+::-webkit-scrollbar-thumb { background: var(--color-border-subtle); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-text-muted); }
+
+/* ── Utilities ─────────────────────────────────────────── */
+img { transition: opacity 0.3s ease; }
+
+:focus-visible {
+  outline: 2px solid var(--color-secondary);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
