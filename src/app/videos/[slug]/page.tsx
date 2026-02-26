@@ -3,7 +3,8 @@ import type { Metadata } from "next";
 import { getVideo, getVideoSuggestions } from "@/lib/api";
 import VideoPlayer from "@/components/Videoplayer";
 import VideoSuggestions from "@/components/Videosuggestions";
-import { formatDate, formatViews } from "@/lib/utils";
+import CollapsibleDescription from "@/components/CollapsibleDescription";
+import { formatDate } from "@/lib/utils";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -87,12 +88,10 @@ export default async function VideoPage({ params }: PageProps) {
                 )}
               </div>
 
-              {/* Divider */}
+              {/* Description — collapsible when > 50 words */}
               {video.description && (
-                <div className="mt-2 pt-2 border-t border-gray-300">
-                  <p className="text-text-muted text-sm leading-relaxed whitespace-pre-line">
-                    {video.description}
-                  </p>
+                <div className="mt-2 pt-2 border-t border-border-subtle">
+                  <CollapsibleDescription description={video.description} />
                 </div>
               )}
             </div>

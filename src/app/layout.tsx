@@ -16,8 +16,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Kashful Content Library",
-    template: "%s • Kashful Content Library",
+    default: "Digital Democracy Content Library",
+    template: "%s • Digital Democracy Content Library",
   },
 };
 

@@ -1,11 +1,11 @@
 import type { Video, Artwork, PaginatedResponse } from "@/types";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
 
 async function fetcher<T>(path: string, options?: RequestInit): Promise<T> {
   const res = await fetch(`${API_URL}${path}`, {
     ...options,
-    next: { revalidate: 3600 },
+    // next: { revalidate: 3600 },
   });
   if (!res.ok) throw new Error(`API error: ${res.status}`);
   return res.json();

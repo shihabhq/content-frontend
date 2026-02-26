@@ -24,7 +24,7 @@ export default function RecommendedSlider({ videos }: RecommendedSliderProps) {
       <div className="relative">
         <div className="flex flex-wrap items-end justify-between gap-3 mb-6">
           <div>
-            <h2 className="text-4xl font-semibold text-text-main tracking-tight">
+            <h2 className="text-2xl lg:text-4xl font-semibold text-text-main tracking-tight">
              Recommended by Curators
             </h2>
             <p className="text-base text-text-muted mt-0.5">
