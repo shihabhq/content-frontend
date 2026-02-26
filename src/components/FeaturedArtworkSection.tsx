@@ -15,7 +15,7 @@ export default function FeaturedArtworksSection({
     <section>
       <div className="flex flex-wrap items-end justify-between gap-3 mb-6">
         <div>
-          <h2 className="text-4xl font-semibold text-text-main tracking-tight">
+          <h2 className="text-2xl lg:text-4xl font-semibold text-text-main tracking-tight">
             Artworks
           </h2>
           <p className="text-base text-text-muted mt-0.5">
@@ -24,7 +24,7 @@ export default function FeaturedArtworksSection({
         </div>
         <Link
           href="/artworks"
-          className="text-sm font-medium text-text-secondary hover:underline"
+          className="text-sm font-medium text-secondary hover:underline"
         >
           View all
         </Link>

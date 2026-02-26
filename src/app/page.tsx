@@ -10,7 +10,7 @@ import FeaturedVideosSection from "@/components/FeaturedVideoSection";
 import FeaturedArtworksSection from "@/components/FeaturedArtworkSection";
 import RecentSlider from "@/components/RecentSlider";
 
-export const revalidate = 3600;
+// export const revalidate = 3600;
 
 export default async function HomePage() {
   const [

@@ -24,7 +24,7 @@ export default function RecentSlider({ videos }: RecentSliderProps) {
       <div className="relative">
         <div className="flex flex-wrap items-end justify-between gap-3 mb-6">
           <div>
-            <h2 className="text-4xl font-semibold text-text-main tracking-tight">
+            <h2 className="text-2xl lg:text-4xl font-semibold text-text-main tracking-tight">
               Recent Videos
             </h2>
             <p className="text-base text-text-muted mt-0.5">
@@ -75,7 +75,7 @@ export default function RecentSlider({ videos }: RecentSliderProps) {
         <button
           type="button"
           onClick={() => swiperRef.current?.slidePrev()}
-          className="swiper-prev absolute -left-5 top-[45%] -translate-y-1/2 -translate-x-2 z-10 w-10 h-10 rounded-full bg-white border border-border-subtle shadow-md flex items-center justify-center text-text-main hover:bg-white/90 cursor-pointer transition-colors disabled:opacity-40"
+          className="swiper-prev hidden sm:flex absolute -left-5 top-[45%] -translate-y-1/2 -translate-x-2 z-10 w-10 h-10 rounded-full bg-white border border-border-subtle shadow-md items-center justify-center text-text-main hover:bg-white/90 cursor-pointer transition-colors disabled:opacity-40"
           aria-label="Previous"
         >
           <svg
@@ -95,7 +95,7 @@ export default function RecentSlider({ videos }: RecentSliderProps) {
         <button
           type="button"
           onClick={() => swiperRef.current?.slideNext()}
-          className="swiper-next absolute -right-5 top-[45%] -translate-y-1/2 translate-x-2 z-10 w-10 h-10 rounded-full bg-white border border-border-subtle shadow-md flex items-center justify-center text-text-main hover:bg-white/90 cursor-pointer transition-colors disabled:opacity-40"
+          className="swiper-next hidden sm:flex absolute -right-5 top-[45%] -translate-y-1/2 translate-x-2 z-10 w-10 h-10 rounded-full bg-white border border-border-subtle shadow-md items-center justify-center text-text-main hover:bg-white/90 cursor-pointer transition-colors disabled:opacity-40"
           aria-label="Next"
         >
           <svg
