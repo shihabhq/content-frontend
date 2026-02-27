@@ -13,8 +13,15 @@ export const metadata: Metadata = {
 export default async function VideosPage() {
   let videos: Video[] = [];
   try {
-    const res = await getAllVideos(1, 24);
-    videos = res.data;
+    const pageSize = 24;
+    let page = 1;
+    let res = await getAllVideos(page, pageSize);
+    videos = [...res.data];
+    while (videos.length < res.total) {
+      page += 1;
+      res = await getAllVideos(page, pageSize);
+      videos = [...videos, ...res.data];
+    }
   } catch {
     videos = [];
   }
