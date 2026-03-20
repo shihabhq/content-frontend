@@ -19,6 +19,13 @@ export async function generateMetadata({
     return {
       title: video.title,
       description: video.description || undefined,
+      creator: video.creatorName || undefined,
+      alternates: {
+        canonical: `https://rightscontent.com/videos/${slug}`,
+        languages: {
+          "en-US": `/videos/${slug}`,
+        },
+      },
       openGraph: {
         title: video.title,
         description: video.description || undefined,
@@ -64,6 +71,11 @@ export default async function VideoPage({ params }: PageProps) {
               <h1 className="text-xl sm:text-2xl font-bold text-text-main leading-snug">
                 {video.title}
               </h1>
+              {video.creatorName && (
+                <div className="text-text-muted text-sm">
+                  {video.creatorName}
+                </div>
+              )}
 
               <div className="flex flex-wrap items-center gap-3 mt-2">
                 <span className="text-text-muted text-sm">

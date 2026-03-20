@@ -16,15 +16,15 @@ export default async function HomePage() {
   const [
     recommendedRes,
     featuredVideosRes,
-    featuredArtworksRes,
+    // featuredArtworksRes,
     recentVideosRes,
-    allArtworksRes,
+    // allArtworksRes,
   ] = await Promise.allSettled([
     getRecommendedVideos(),
     getFeaturedVideos(),
-    getFeaturedArtworks(),
+    // getFeaturedArtworks(),
     getRecentVideos(),
-    getAllArtworks(1, 12),
+    // getAllArtworks(1, 12),
   ]);
 
   const recommended =
@@ -33,25 +33,25 @@ export default async function HomePage() {
     featuredVideosRes.status === "fulfilled"
       ? featuredVideosRes.value.data
       : [];
-  const featuredArtworks =
-    featuredArtworksRes.status === "fulfilled"
-      ? featuredArtworksRes.value.data
-      : [];
+  // const featuredArtworks =
+  //   featuredArtworksRes.status === "fulfilled"
+  //     ? featuredArtworksRes.value.data
+  //     : [];
   const recentVideos =
     recentVideosRes.status === "fulfilled" ? recentVideosRes.value.data : [];
-  const allArtworks =
-    allArtworksRes.status === "fulfilled" ? allArtworksRes.value.data : [];
+  // const allArtworks =
+  //   allArtworksRes.status === "fulfilled" ? allArtworksRes.value.data : [];
 
   const sliderVideos = recommended.length > 0 ? recommended : recentVideos;
   const sectionVideos =
     featuredVideos.length > 0 ? featuredVideos : recentVideos;
-  const sectionArtworks =
-    featuredArtworks.length > 0 ? featuredArtworks : allArtworks;
+  // const sectionArtworks =
+  //   featuredArtworks.length > 0 ? featuredArtworks : allArtworks;
 
   return (
     <div className="min-h-screen bg-background-light">
       {/* Content sections */}
-      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-10 py-10 space-y-12">
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-10 2xl:px-0 py-10 space-y-12">
         {sliderVideos.length > 0 && <RecommendedSlider videos={sliderVideos} />}
 
         {sectionVideos.length > 0 && (
@@ -60,9 +60,9 @@ export default async function HomePage() {
 
         {recentVideos.length > 0 && <RecentSlider videos={recentVideos} />}
 
-        {sectionArtworks.length > 0 && (
+        {/* {sectionArtworks.length > 0 && (
           <FeaturedArtworksSection artworks={sectionArtworks} />
-        )}
+        )} */}
       </div>
     </div>
   );

@@ -22,6 +22,7 @@ export interface Video {
   isRecommended: boolean;
   viewCount: number;
   publishedAt: string;
+  creatorName?: string | null;
   createdAt: string;
   updatedAt: string;
   tags: VideoTag[];
@@ -41,6 +42,7 @@ export interface Artwork {
   imageUrl: string;
   isFeatured: boolean;
   isPublished: boolean;
+  creatorName?: string | null;
   createdAt: string;
   updatedAt: string;
   tags: ArtworkTag[];

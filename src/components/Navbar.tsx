@@ -108,7 +108,7 @@ export default function Navbar() {
             {/* Right: Create button + hamburger (mobile) */}
             <div className="flex items-center gap-2 shrink-0">
               <Link
-                href="/contact"
+                href="/add-content"
                 className="hidden md:inline-flex items-center justify-center rounded-lg bg-secondary text-white text-sm font-medium px-4 py-2 hover:opacity-90 transition-opacity"
               >
                 Add Content
@@ -186,7 +186,7 @@ export default function Navbar() {
               );
             })}
             <Link
-              href="/contact"
+              href="/add-content"
               onClick={() => setIsMenuOpen(false)}
               className="block w-full text-center rounded-lg bg-secondary text-white font-medium py-3"
             >
