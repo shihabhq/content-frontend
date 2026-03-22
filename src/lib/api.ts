@@ -35,6 +35,19 @@ export const getVideoSuggestions = (slug: string) =>
 export const incrementView = (slug: string) =>
   fetch(`${API_URL}/api/videos/${slug}/view`, { method: "POST" });
 
+export const submitVideo = (payload: {
+  title: string;
+  youtubeUrl: string;
+  description?: string;
+  tags?: string[];
+  creatorName?: string;
+}) =>
+  fetcher<{ success: boolean }>("/api/videos/submit", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+
 // ─── Artworks ─────────────────────────────────────────────
 
 export const getFeaturedArtworks = () =>
