@@ -4,6 +4,7 @@ import Link from "next/link";
 import { getArtwork, getArtworkSuggestions } from "@/lib/api";
 import { formatDate } from "@/lib/utils";
 import ArtworkCard from "@/components/Artworkcard";
+import ArtworkLightboxImage from "@/components/ArtworkLightboxImage";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -66,15 +67,8 @@ export default async function ArtworkPage({ params }: PageProps) {
           Back to Artworks
         </Link>
 
-        {/* Main artwork — large, window-filling image */}
-        <div className="relative w-full aspect-video rounded-lg overflow-hidden bg-background-surface shadow-xl shadow-black/10">
-          <img
-            src={artwork.imageUrl}
-            alt={artwork.title}
-            loading="eager"
-            className="absolute inset-0 w-full rounded-lg h-full object-contain"
-          />
-        </div>
+        {/* Main artwork (click to open lightbox) */}
+        <ArtworkLightboxImage src={artwork.imageUrl} alt={artwork.title} />
 
         {/* Title & meta */}
         <div className="mt-8">
@@ -86,6 +80,15 @@ export default async function ArtworkPage({ params }: PageProps) {
             <span className="text-text-muted text-sm">
               {formatDate(artwork.createdAt)}
             </span>
+
+            {artwork.creatorName && (
+              <>
+                <span className="text-text-muted">·</span>
+                <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs bg-white border border-color-border-subtle text-text-main">
+                  By {artwork.creatorName}
+                </span>
+              </>
+            )}
 
             {artwork.tags.length > 0 && (
               <>
