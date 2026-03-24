@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
+import { ChevronUp } from "lucide-react";
 
 const DEMOCRACY_LOGO = "/navbar/ddi.png";
 const GAME_URL = "https://www.votekori.cloud/";
@@ -13,12 +13,14 @@ const navLinks = [
   { label: "Home", href: "/" },
   { label: "About", href: "/about" },
   { label: "Videos", href: "/videos" },
-  { label: "Contact", href: "/contact" },
+  // { label: "Contact", href: "/contact" },
+  { label: "Artworks", href: "/artworks" },
 ];
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [upperNavVisible, setUpperNavVisible] = useState(true);
   const pathname = usePathname();
 
   useEffect(() => {
@@ -38,30 +40,38 @@ export default function Navbar() {
   return (
     <>
       <header
-        className={`fixed top-0 left-0 right-0 z-50 duration-300 ${
+        className={`fixed top-0 bg-white left-0 right-0 z-50 duration-300 ${
           isScrolled ? "bg-white shadow-sm" : ""
         }`}
       >
-        <div className=" mx-auto px-4 sm:px-6 lg:px-10">
-          {/* ─── ROW 1: Democracy logo (left) + Game (right) ─── */}
-          <div className="flex max-w-[1400px] mx-auto items-center justify-between h-12 md:h-16">
-            <Link href="/" className="flex items-center gap-2 shrink-0">
-              <img
-                src={DEMOCRACY_LOGO}
-                alt="Digital Democracy Initiative"
-                className="h-10 w-auto object-contain"
-              />
-            </Link>
-            <a
-              href={GAME_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-sm font-medium text-gray-700 hover:text-secondary border border-gray-300 hover:border-secondary rounded-lg px-3 py-1.5 transition-colors"
-            >
-              Game
-            </a>
+        <div className="mx-auto px-4 sm:px-6 lg:px-10">
+          {/* ─── ROW 1: collapsible on toggle ─── */}
+          <div
+            className={`overflow-hidden transition-all duration-300 ease-in-out ${
+              upperNavVisible
+                ? "max-h-24 md:max-h-28 opacity-100"
+                : "max-h-0 opacity-0"
+            }`}
+          >
+            <div className="flex max-w-[1400px] mx-auto items-center justify-between h-12 md:h-16">
+              <Link href="/" className="flex items-center gap-2 shrink-0">
+                <img
+                  src={DEMOCRACY_LOGO}
+                  alt="Digital Democracy Initiative"
+                  className="h-10 w-auto object-contain"
+                />
+              </Link>
+              <a
+                href={GAME_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm font-medium border border-gray-300 hover:border-primary bg-primary text-white rounded-lg px-3 py-1.5 transition-colors"
+              >
+                Game
+              </a>
+            </div>
+            <div className="border-b w-full border-gray-200" />
           </div>
-          <div className="border-b w-full border-gray-200"></div>
           {/* ─── ROW 2: Brand logo (left) + Nav (center) + Create (right) ─── */}
           <div className="flex max-w-[1400px] mx-auto items-center justify-between h-14 md:h-16 gap-4">
             {/* Left: brand logo */}
@@ -73,37 +83,37 @@ export default function Navbar() {
                   className="h-12 md:h-16 w-auto object-contain"
                 />
               </Link>
-              {/* Center: nav links (desktop) */}
-              <nav className="hidden md:flex flex-1 justify-center gap-8 lg:gap-10">
-                {navLinks.map((item) => {
-                  const isActive = pathname === item.href;
-                  return (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      className="relative group py-1"
-                    >
-                      <span
-                        className={`text-sm lg:text-base font-medium tracking-wide transition-colors duration-200 ${
-                          isActive
-                            ? "text-secondary"
-                            : "text-gray-600 group-hover:text-secondary"
-                        }`}
-                      >
-                        {item.label}
-                      </span>
-                      {/* <span
-                        className={`absolute left-0 -bottom-1 h-[2px] w-full bg-secondary transition-transform duration-300 origin-left ${
-                          isActive
-                            ? "scale-x-100"
-                            : "scale-x-0 group-hover:scale-x-100"
-                        }`}
-                      /> */}
-                    </Link>
-                  );
-                })}
-              </nav>
             </div>
+            {/* Center: nav links (desktop) */}
+            <nav className="hidden md:flex flex-1 justify-center gap-8 lg:gap-10">
+              {navLinks.map((item) => {
+                const isActive = pathname === item.href;
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className="relative group py-1"
+                  >
+                    <span
+                      className={`text-sm lg:text-base font-medium tracking-wide transition-colors duration-200 ${
+                        isActive
+                          ? "text-secondary"
+                          : "text-gray-600 group-hover:text-secondary"
+                      }`}
+                    >
+                      {item.label}
+                    </span>
+                    <span
+                      className={`absolute left-0 bottom-0 h-[2px] w-full bg-secondary transition-transform duration-300 origin-left ${
+                        isActive
+                          ? "scale-x-100"
+                          : "scale-x-0 group-hover:scale-x-100"
+                      }`}
+                    />
+                  </Link>
+                );
+              })}
+            </nav>
 
             {/* Right: Create button + hamburger (mobile) */}
             <div className="flex items-center gap-2 shrink-0">
@@ -139,6 +149,20 @@ export default function Navbar() {
             </div>
           </div>
         </div>
+        <button
+          type="button"
+          onClick={() => setUpperNavVisible((prev) => !prev)}
+          aria-label={
+            upperNavVisible ? "Hide top navbar row" : "Show top navbar row"
+          }
+          className="absolute left-1/2 -bottom-12 -translate-x-1/2 cursor-pointer -translate-y-1/2 z-10 rounded-b-sm border-b border-gray-300 bg-white px-2.5 py-1.5  hover:bg-gray-50 transition-colors"
+        >
+          <ChevronUp
+            className={`w-5 h-5 transition-transform duration-300 ${
+              upperNavVisible ? "rotate-0" : "rotate-180"
+            }`}
+          />
+        </button>
       </header>
 
       {/* Mobile menu overlay + drawer */}

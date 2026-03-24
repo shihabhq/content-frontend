@@ -1,14 +1,20 @@
 "use client";
 
-import { useState, useCallback } from "react";
-import { submitVideo } from "@/lib/api";
+import { useState, useCallback, useRef } from "react";
+import { X } from "lucide-react";
+import { submitArtwork, submitVideo } from "@/lib/api";
 
 export default function AddContentPage() {
+  const [contentType, setContentType] = useState<"artwork" | "video">("artwork");
+
   const [title, setTitle] = useState("");
   const [youtubeUrl, setYoutubeUrl] = useState("");
   const [description, setDescription] = useState("");
   const [tagsString, setTagsString] = useState("");
   const [creatorName, setCreatorName] = useState("");
+  const [artworkImage, setArtworkImage] = useState<File | null>(null);
+  const [artworkPreview, setArtworkPreview] = useState<string | null>(null);
+  const artworkInputRef = useRef<HTMLInputElement>(null);
   const [submitting, setSubmitting] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -24,21 +30,41 @@ export default function AddContentPage() {
           .split(",")
           .map((t) => t.trim())
           .filter(Boolean);
-        await submitVideo({
-          title,
-          youtubeUrl,
-          description: description || undefined,
-          creatorName: creatorName || undefined,
-          tags,
-        });
-        setSuccessMessage(
-          "Submitted successfully. Your content is under review.",
-        );
+
+        if (contentType === "video") {
+          await submitVideo({
+            title,
+            youtubeUrl,
+            description: description || undefined,
+            creatorName: creatorName || undefined,
+            tags,
+          });
+          setSuccessMessage("Submitted successfully. Your content is under review.");
+        } else {
+          if (!artworkImage) {
+            setErrorMessage("Please upload an artwork image.");
+            setSubmitting(false);
+            return;
+          }
+          await submitArtwork({
+            title,
+            content: description || undefined,
+            creatorName: creatorName || undefined,
+            tags,
+            image: artworkImage,
+          });
+          setSuccessMessage(
+            "Artworks submitted successfully. Your submission is under review and you will get update soon.",
+          );
+        }
+
         setTitle("");
         setYoutubeUrl("");
         setDescription("");
         setTagsString("");
         setCreatorName("");
+        setArtworkImage(null);
+        setArtworkPreview(null);
       } catch {
         setErrorMessage(
           "Something went wrong. Please check the fields and try again.",
@@ -47,38 +73,39 @@ export default function AddContentPage() {
         setSubmitting(false);
       }
     },
-    [title, youtubeUrl, description, tagsString, creatorName],
+    [contentType, title, youtubeUrl, description, tagsString, creatorName, artworkImage],
   );
 
   return (
     <div className="min-h-screen font-sans">
-      {/* Header strip */}
-      {/* <div className="bg-primary px-6 py-10 md:py-12">
-        <div className="max-w-[780px] mx-auto">
-          <span className="inline-flex items-center gap-2 bg-secondary text-white text-[11px] font-semibold tracking-widest uppercase px-3 py-1.5 rounded mb-4">
-            <svg width="10" height="10" viewBox="0 0 16 16" fill="none">
-              <path
-                d="M8 1v14M1 8h14"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-              />
-            </svg>
-            Submit content
-          </span>
-          <h1 className="text-3xl sm:text-4xl font-semibold text-white leading-tight mb-3">
-            Add a video resource
-          </h1>
-          <p className="text-[#9ca8b4] text-sm leading-relaxed max-w-lg">
-            Share a YouTube video that helps people learn about rights,
-            democracy, or civic engagement. Our team reviews every submission
-            before it goes live.
-          </p>
-        </div>
-      </div> */}
-
-      {/* Body */}
       <div className="max-w-[1000px] rounded-xl border border-border-subtle bg-background-surface mx-auto px-4 sm:px-6 py-10 md:py-16 my-16">
+        <div className="mb-8 flex justify-center">
+          <div className="inline-flex rounded-lg border border-border-subtle bg-background-light p-1">
+            <button
+              type="button"
+              onClick={() => setContentType("artwork")}
+              className={`px-4 py-2 text-sm rounded-md transition ${
+                contentType === "artwork"
+                  ? "bg-secondary text-white"
+                  : "text-text-main hover:bg-background-surface"
+              }`}
+            >
+              Upload artwork
+            </button>
+            <button
+              type="button"
+              onClick={() => setContentType("video")}
+              className={`px-4 py-2 text-sm rounded-md transition ${
+                contentType === "video"
+                  ? "bg-secondary text-white"
+                  : "text-text-main hover:bg-background-surface"
+              }`}
+            >
+              Upload video
+            </button>
+          </div>
+        </div>
+
         {successMessage && (
           <div className="mb-6 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
             {successMessage}
@@ -94,7 +121,7 @@ export default function AddContentPage() {
           {/* Left: form */}
           <form onSubmit={handleSubmit} className="space-y-5">
             <p className="text-[11px] font-semibold tracking-widest uppercase text-secondary mb-4">
-              Video info
+              {contentType === "video" ? "Video info" : "Artwork info"}
             </p>
 
             <div>
@@ -113,39 +140,90 @@ export default function AddContentPage() {
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-text-main mb-1.5">
-                YouTube link <span className="text-secondary">*</span>
-              </label>
-              <div className="relative">
-                <svg
-                  className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none text-text-muted"
-                  width="14"
-                  height="14"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                >
-                  <path
-                    d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
+              {contentType === "video" ? (
+                <>
+                  <label className="block text-xs font-medium text-text-main mb-1.5">
+                    YouTube link <span className="text-secondary">*</span>
+                  </label>
+                  <div className="relative">
+                    <svg
+                      className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none text-text-muted"
+                      width="14"
+                      height="14"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                    >
+                      <path
+                        d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                      />
+                      <path
+                        d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                      />
+                    </svg>
+                    <input
+                      type="url"
+                      required
+                      placeholder="https://www.youtube.com/watch?v=..."
+                      value={youtubeUrl}
+                      onChange={(e) => setYoutubeUrl(e.target.value)}
+                      className="w-full rounded-lg border-[1.5px] border-border-subtle bg-background-surface pl-9 pr-3 py-2.5 text-sm text-text-main outline-none focus:border-secondary transition-colors"
+                    />
+                  </div>
+                </>
+              ) : (
+                <>
+                  <label className="block text-xs font-medium text-text-main mb-1.5">
+                    Artwork image <span className="text-secondary">*</span>
+                  </label>
+                  <input
+                    ref={artworkInputRef}
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0] ?? null;
+                      setArtworkImage(file);
+                      setArtworkPreview(file ? URL.createObjectURL(file) : null);
+                    }}
                   />
-                  <path
-                    d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                  />
-                </svg>
-                <input
-                  type="url"
-                  required
-                  placeholder="https://www.youtube.com/watch?v=..."
-                  value={youtubeUrl}
-                  onChange={(e) => setYoutubeUrl(e.target.value)}
-                  className="w-full rounded-lg border-[1.5px] border-border-subtle bg-background-surface pl-9 pr-3 py-2.5 text-sm text-text-main outline-none focus:border-secondary transition-colors"
-                />
-              </div>
+                  {!artworkImage && (
+                    <button
+                      type="button"
+                      onClick={() => artworkInputRef.current?.click()}
+                      className="inline-flex items-center cursor-pointer justify-center rounded-lg border border-border-subtle bg-background-surface px-4 py-2.5 text-sm font-medium text-text-main hover:border-secondary hover:text-secondary transition-colors"
+                    >
+                      Upload image
+                    </button>
+                  )}
+                  {artworkPreview && (
+                    <div className="relative mt-2 h-40 w-full sm:w-72 overflow-hidden rounded-lg border border-border-subtle bg-background-light">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setArtworkImage(null);
+                          setArtworkPreview(null);
+                          if (artworkInputRef.current) artworkInputRef.current.value = "";
+                        }}
+                        className="absolute right-2 cursor-pointer top-2 z-10 inline-flex h-7 w-7 items-center justify-center rounded-full bg-white/95 text-text-main shadow-sm hover:bg-white"
+                        aria-label="Remove selected image"
+                      >
+                        <X className="h-4 w-4" />
+                      </button>
+                      <img
+                        src={artworkPreview}
+                        alt="Artwork preview"
+                        className="h-full w-full object-contain"
+                      />
+                    </div>
+                  )}
+                </>
+              )}
             </div>
 
             <div>
@@ -157,7 +235,11 @@ export default function AddContentPage() {
                 required
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                placeholder="What is this video about? Why should people watch it?"
+                placeholder={
+                  contentType === "video"
+                    ? "What is this video about? Why should people watch it?"
+                    : "Describe this artwork and its context."
+                }
                 className="w-full rounded-lg border-[1.5px] border-border-subtle bg-background-surface px-3 py-2.5 text-sm text-text-main outline-none focus:border-secondary transition-colors resize-y"
               />
             </div>
@@ -201,7 +283,7 @@ export default function AddContentPage() {
                 disabled={submitting}
                 className="bg-secondary text-white rounded-lg px-5 py-2.5 text-sm font-semibold hover:opacity-90 disabled:opacity-60 transition-opacity"
               >
-                {submitting ? "Submitting…" : "Submit video"}
+                {submitting ? "Submitting…" : contentType === "video" ? "Submit video" : "Submit artwork"}
               </button>
               <span className="text-xs text-text-muted">
                 Fields marked <span className="text-secondary">*</span> are
@@ -216,12 +298,21 @@ export default function AddContentPage() {
               Submission guidelines
             </p>
             <ul className="space-y-3">
-              {[
-                "Videos must be publicly available on YouTube",
-                "Content should relate to rights, democracy, or civic education",
-                "Our team reviews all submissions — this may take 1–3 days",
-                "You'll be credited if you provide your name",
-              ].map((item) => (
+              {(
+                contentType === "video"
+                  ? [
+                      "Videos must be publicly available on YouTube",
+                      "Content should relate to rights, democracy, or civic education",
+                      "Our team reviews all submissions — this may take 1–3 days",
+                      "You'll be credited if you provide your name",
+                    ]
+                  : [
+                      "Upload clear artwork images (JPG/PNG/WEBP).",
+                      "Artwork should relate to rights, democracy, or civic education.",
+                      "Our team reviews all submissions before publishing.",
+                      "You'll be credited if you provide your name.",
+                    ]
+              ).map((item) => (
                 <li key={item} className="flex gap-2.5 items-start">
                   <span className="mt-0.5 w-4 h-4 min-w-[1rem] rounded-full bg-primary flex items-center justify-center">
                     <svg width="8" height="8" viewBox="0 0 10 10" fill="none">
@@ -243,10 +334,7 @@ export default function AddContentPage() {
             <div className="mt-4 pt-4 border-t border-border-subtle">
               <p className="text-xs text-text-muted">
                 Questions?{" "}
-                <a
-                  href="/contact"
-                  className="text-secondary font-medium hover:underline"
-                >
+                <a href="/contact" className="text-secondary font-medium hover:underline">
                   Contact us →
                 </a>
               </p>

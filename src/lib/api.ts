@@ -48,6 +48,30 @@ export const submitVideo = (payload: {
     body: JSON.stringify(payload),
   });
 
+export const submitArtwork = async (payload: {
+  title: string;
+  content?: string;
+  tags?: string[];
+  creatorName?: string;
+  image: File;
+}) => {
+  const formData = new FormData();
+  formData.append("title", payload.title);
+  if (payload.content) formData.append("content", payload.content);
+  if (payload.creatorName) formData.append("creatorName", payload.creatorName);
+  formData.append("tags", JSON.stringify(payload.tags ?? []));
+  formData.append("image", payload.image);
+
+  const res = await fetch(`${API_URL}/api/artworks/submit`, {
+    method: "POST",
+    body: formData,
+    cache: "no-store",
+  });
+
+  if (!res.ok) throw new Error(`API error: ${res.status}`);
+  return res.json() as Promise<{ success: boolean }>;
+};
+
 // ─── Artworks ─────────────────────────────────────────────
 
 export const getFeaturedArtworks = () =>
